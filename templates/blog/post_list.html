@@ -1,0 +1,25 @@
+{% extends "blog/base.html" %}
+{% block title %}Главная страница{% endblock %}
+{% block content %}
+    <h1 class="page-title">Блог</h1>
+    <section class="section-wrapper">
+        <h2 class="section-title">Все записи блога</h2>
+        <div class="posts-container">
+            {% for post in object_list %}
+            <article class="post-wrapper">
+                <img class="post-image" src="{{ post.image.url }}" alt="{{ post.title }}">
+                <h3 class="post-title">
+                    <a href="{% url 'blog:index' %}read/{{ post.id }}">
+                        {{ post.title }}
+                    </a>
+                </h3>
+                <p class="post-text">
+                    {{ post.text|slice:":200" }}...
+                </p>
+                <a class="post-more" href="{% url 'blog:read_post' post.id %}">читать полностью</a>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+    <a class="add_post" href="{% url 'blog:add_post' %}">добавить запись</a>
+{% endblock %}

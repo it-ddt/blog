@@ -1,0 +1,14 @@
+{% extends "blog/base.html" %}
+{% block title %}Редактировать запись{% endblock %}
+{% block content %}
+        <h1 class="page-title">Блог</h1>
+        <section class="section-wrapper">
+            <h2 class="section-title">Редактировать запись</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Сохранить изменения</button>
+            </form>
+        </section>
+        <a class="add_post" href="{% url 'blog:index' %}">смотреть все записи</a>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "blog/base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+        <h1 class="page-title">Блог</h1>
+        <section class="section-wrapper">
+            <div class="single_post-container">
+                <img class="single_post-image" src="{{ post.image.url }}" alt="">
+                <h2 class="single_post-title">{{ post.title }}</h2>
+                <p class="single_post-text">{{ post.text }}</p>
+                <p class="single_post-datetime">опубликовано {{ post.date }} {{ post.time }} пользователем {{ post.author }}, его ID {{ post.author.id }}</p>
+                {% if user.is_authenticated %}
+                    {% if post.author.id == user.id %}
+                    <a href="/blog/edit/{{ post.id }}">редактировать запись</a><br>
+                    <a href="/blog/delete/{{ post.id }}">удалить запись</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </section>
+        <a class="add_post" href="{% url 'blog:index' %}">смотреть все записи</a>
+{% endblock %}
