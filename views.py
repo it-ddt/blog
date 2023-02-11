@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import logout
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.conf import settings
 from .models import Post, Category, Like
 
 class PostDetailView(DetailView):
@@ -10,9 +12,15 @@ class PostDetailView(DetailView):
 class PostListView(ListView):
     model = Post
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['MEDIA_URL'] = settings.MEDIA_URL
+        return context
+
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'text', 'category']
+    fields = ['title', 'text', 'category', 'image']
+    success_url = reverse_lazy('blog:post_list')
 
     def form_valid(self, form):
         form.instance.author = self.request.user

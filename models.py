@@ -13,6 +13,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     likes = models.ManyToManyField(User, related_name='liked_posts', through='Like')
+    image = models.ImageField(upload_to="img", null=True, blank=True)
 
     def __str__(self):
         return self.title

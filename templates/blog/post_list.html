@@ -1,18 +1,22 @@
 {% extends "blog/base.html" %}
 {% block title %}Главная страница{% endblock %}
 {% block content %}
+
 <h1>Блог</h1>
 <h2>Все записи</h2>
-<ul>
+<div class="post-container">
     {% for post in object_list %}
-        <li>
+        <article class="post-item">
+            <img src="{{ MEDIA_URL }}{{ post.image }}" alt="фото записи">
             <a href="{% url 'blog:post_detail' post.pk %}">
                 {{ post.title }}
             </a>
-        </li>
+        </article>
     {% empty %}
-        <li>Записей пока нет</li>
+        <span>Записей пока нет</span>
     {% endfor %}
-</ul>
+</div>
 <a href="{% url 'blog:post_create' %}">добавить запись</a>
 {% endblock %}
+
+
