@@ -1,6 +1,6 @@
 {% if user.is_authenticated %}
-    <p>Пользователь <strong>{{ user.username }}</strong> авторизован, его ID {{ user.id }} <a href="">выйти</a></p>
+    <p>Пользователь <strong>{{ user.username }}</strong> авторизован, его ID {{ user.id }} <a href="{% url 'blog:logout' %}">выйти</a></p>
 {% else %}
-    <a href="">войти</a>
+    <a href="{% url 'login' %}">войти</a>
     <a href="">зарегистрироваться</a>
 {% endif %}

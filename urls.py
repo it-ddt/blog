@@ -12,4 +12,5 @@ urlpatterns = [
     path('categories/<int:pk>/', CategoryDetailView.as_view(), name='category_detail'),
     path('posts/<int:pk>/like/', add_like, name='add_like'),
     path('posts/<int:pk>/dislike/', remove_like, name='remove_like'),
+    path('accounts/logout/', logout_view, name='logout'),
 ]

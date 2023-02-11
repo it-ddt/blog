@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import logout
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post, Category, Like
 
@@ -42,3 +43,7 @@ def remove_like(request, pk):
     like = Like.objects.get(user=request.user, post=post)
     like.delete()
     return redirect('blog:post_detail', pk=pk)
+
+def logout_view(request):
+    logout(request)
+    return redirect('blog:post_list')
