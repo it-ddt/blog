@@ -1,5 +1,6 @@
 {% if user.is_authenticated %}
     <p>Пользователь <strong>{{ user.username }}</strong> авторизован, его ID {{ user.id }} <a href="">выйти</a></p>
 {% else %}
-    пользователь не авторизован <a href="">авторизоваться</a>
+    <a href="">войти</a>
+    <a href="">зарегистрироваться</a>
 {% endif %}

@@ -1,0 +1,14 @@
+{% extends "blog/base.html" %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+<h1>Блог</h1>
+<h2>{{ category.title }}</h2>
+<ul>
+    {% for post in category.post_set.all %}
+        <li><a href="{% url 'blog:post_detail' post.id %}">{{ post.title }}</a></li>
+    {% endfor %}
+</ul>
+{% if not category.post_set.all %}
+    <p>No posts found</p>
+{% endif %}
+{% endblock %}

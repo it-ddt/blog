@@ -1,7 +1,7 @@
-from django import forms
-from .models import Post
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
-
-class LoginForm(forms.Form):
-    name = forms.CharField(max_length=100)
-    password = forms.CharField(max_length=100)
+class CustomUserCreationForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        model = User
+        fields = "__all__"

@@ -1,18 +1,15 @@
 from django.urls import path
-from . import views
-from django.contrib.auth import views as auth_views
+from .views import *
 
-
-app_name = "blog"
+app_name = 'blog'
 urlpatterns = [
-    path("", views.PostListView.as_view(), name="index"),
-    path("add", views.PostCreateView.as_view(), name="add_post"),
-    path("read/<int:pk>", views.PostDetailView.as_view(), name="read_post"),
-    path("delete/<int:pk>", views.PostDeleteView.as_view(), name="delete_post"),
-    path("edit/<int:pk>", views.PostUpdateView.as_view(), name="edit_post"),
-    path(
-        "accounts/login/",
-        auth_views.LoginView.as_view(template_name="blog/login.html",)
-    )
+    path('', PostListView.as_view(), name='post_list'),
+    path('posts/<int:pk>/', PostDetailView.as_view(), name='post_detail'),
+    path('posts/new/', PostCreateView.as_view(), name='post_create'),
+    path('posts/<int:pk>/update/', PostUpdateView.as_view(), name='post_update'),
+    path('posts/<int:pk>/delete/', PostDeleteView.as_view(), name='post_delete'),
+    path('categories/', CategoryListView.as_view(), name='category_list'),
+    path('categories/<int:pk>/', CategoryDetailView.as_view(), name='category_detail'),
+    path('posts/<int:pk>/like/', add_like, name='add_like'),
+    path('posts/<int:pk>/dislike/', remove_like, name='remove_like'),
 ]
-

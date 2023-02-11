@@ -1,56 +1,44 @@
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
-from django.http import HttpResponse
-from django.urls import reverse, reverse_lazy
-from django.contrib.auth import authenticate
-from django.views.generic import ListView, CreateView, DeleteView, UpdateView, DetailView
-from .models import Post
-from .forms import LoginForm
-"""
-TODO: реализовать аутентификацию пользователя (логин, логоут, востт пасса, регистрацию)
-с помощью auth_views
-"""
-
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from .models import Post, Category, Like
 
 class PostDetailView(DetailView):
     model = Post
 
-
 class PostListView(ListView):
     model = Post
 
-
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = "__all__"
-    success_url = reverse_lazy("blog:index")
+    fields = ['title', 'text', 'category']
 
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
-class PostDeleteView(DeleteView):
+class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
-    success_url = reverse_lazy("blog:index")
+    fields = ['title', 'text', 'category']
 
-
-class PostUpdateView(UpdateView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
-    fields = "__all__"
-    success_url = reverse_lazy("blog:index")
-    template_name_suffix = '_update_form'
+    success_url = '/posts/'
 
+class CategoryDetailView(DetailView):
+    model = Category
 
-def login(request):
-    if request.method == "GET":
-        data = {"form": LoginForm()}
-        return render(request, 'blog/login.html', data)
-    else:
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data["name"]
-            password = form.cleaned_data["password"]
-            is_authorized = authenticate(username=name, password=password)
-            if is_authorized:
-                return HttpResponse(f"Пользователь {name} авторизован")
-            else:
-                return HttpResponse(f"Не удалось авторизовать пользователя {name}")
-        else:
-            return HttpResponse("Форма невалидна")
+class CategoryListView(ListView):
+    model = Category
+
+def add_like(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    like = Like(user=request.user, post=post)
+    like.save()
+    return redirect('blog:post_detail', pk=pk)
+
+def remove_like(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    like = Like.objects.get(user=request.user, post=post)
+    like.delete()
+    return redirect('blog:post_detail', pk=pk)

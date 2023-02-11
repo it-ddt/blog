@@ -1,31 +1,25 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
-translations_ru = {
-    "title": "заголовок",
-    "text": "основной текст",
-    "image": "изображение",
-    "date": "дата публикации",
-    "time": "время публикации",
-}
-
-class Post(models.Model):
-    title = models.CharField(
-        max_length=50,
-        verbose_name=translations_ru["title"]
-    )
-    text = models.TextField(
-        max_length=1000,
-        verbose_name=translations_ru["text"]
-    )
-    image = models.ImageField(
-        verbose_name=translations_ru["image"],
-        upload_to='blog/images/'
-    )
-    date = models.DateField(verbose_name=translations_ru["date"])
-    time = models.TimeField(verbose_name=translations_ru["time"])
-    author = models.ForeignKey(User, on_delete= models.CASCADE, related_name='blog_posts')
+class Category(models.Model):
+    title = models.CharField(max_length=100)
     
     def __str__(self):
-        return str(self.title)
+        return self.title
+
+class Post(models.Model):
+    title = models.CharField(max_length=100)
+    text = models.TextField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    likes = models.ManyToManyField(User, related_name='liked_posts', through='Like')
+
+    def __str__(self):
+        return self.title
+
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'post')
